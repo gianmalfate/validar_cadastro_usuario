@@ -8,6 +8,7 @@ let emailHelp = document.querySelector("#inputEmailHelp");
 let senha = document.querySelector("#inputPassword");
 let senhaHelp = document.querySelector("#inputPasswordHelp");
 let meter = document.querySelector("#passStrengthMeter");
+let formulario = document.querySelector("#inputResult");
 
 /*declarando o evento listener para o campos de texto do form. 
 Uma vez o foco do campo mude, será chamada a função*/
@@ -20,7 +21,7 @@ senha.addEventListener('focusout', validarSenha);
 // Função para validar o nome do usuário
 function validarNome() {
     const valorNome = nome.value;
-    const regexNome = /^[a-zA-Z ]{6,}$/; // Somente letras e comprimento maior que 6
+    const regexNome = /^[a-zA-Z ]{5,}$/; // Somente letras e comprimento maior que 6
     if (!regexNome.test(valorNome)) {
         nomeHelp.textContent = "O nome deve conter apenas letras e ter no mínimo 6 caracteres";
         nomeHelp.style.color = "red";
@@ -115,7 +116,7 @@ function validarSenha() {
     }
 
     // Determinar o nível de segurança da senha
-    if (valorSenha.length < 8 && temCaractereEspecial && temNumero) {
+    if (valorSenha.length <= 8 && temCaractereEspecial && temNumero) {
         senhaHelp.textContent = "Senha Fraca";
         senhaHelp.style.color = "red";
         meter.value = 10;
@@ -137,6 +138,32 @@ function validarSenha() {
         return false;
     }
 }
+
+// Função principal para validar todos os campos e exibir mensagem
+function validarForm() {
+    // Executar todas as funções de validação
+    const nomeValido = validarNome();
+    const anoValido = validarAno();
+    const emailValido = validarEmail();
+    const senhaValida = validarSenha();
+
+    // Verificar se todos os campos são válidos
+    if (nomeValido && anoValido && emailValido && senhaValida) {
+        // Todos os campos são válidos, exibir mensagem de sucesso
+        formulario.textContent = "Seus dados foram registrados";
+        formulario.style.color = "green";
+    } else {
+        // Pelo menos um campo não é válido, exibir mensagem de erro
+        formulario.textContent = "Seus dados não foram registrados";
+        formulario.style.color = "red";
+    }
+}
+
+
+formulario.addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio padrão do formulário
+    validarForm(); // Chama a função de validação do formulário
+});
 
 
 
